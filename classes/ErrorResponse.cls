@@ -3,7 +3,9 @@
  * responses with custom error messages, status codes, and details.
  */
 public class ErrorResponse implements RestFramework.IRestResponse {
+	@TestVisible
 	private Integer statusCode;
+	@TestVisible
 	private String summary;
 	private String details;
 

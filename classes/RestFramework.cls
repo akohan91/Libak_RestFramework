@@ -23,14 +23,51 @@ public class RestFramework {
 	public static final String ERROR_MESSAGE_INVALID_URI = 'Invalid URI: ';
 	public static final String ERROR_MESSAGE_METHOD_NOT_ALLOWED = 'The {0} http method is not available for this resource: {1}.';
 
+	/**
+	 * Handles an incoming REST request using the specified router.
+	 *
+	 * @param routerType The type of the router to use for routing the request.
+	 */
+	public static void handleRequest(Type routerType) {
+		handleRequest(routerType, null);
+	}
 
 	/**
-	 * The `IRestRouter` interface defines methods for creating REST processors.
+	 * Handles an incoming REST request using the specified router and error response factory.
+	 *
+	 * @param routerType            The type of the router to use for routing the request.
+	 * @param loggerType The type of the logger to use for logging REST-related information (optional, can be null).
 	 */
-	public interface IRestRouter {
-		RestProcessor newRestProcessor(RestRequest request);
-		RestProcessor newRestProcessor(RestRequest request, IRestLogger restLogger);
-		RestProcessor newRestProcessor(RestRequest request, IErrorResponseFactory errorResponseFactory, IRestLogger restLogger);
+	public static void handleRequest(Type routerType, Type loggerType) {
+		handleRequest(routerType, loggerType, ErrorResponseFactory.class);
+	}
+
+	/**
+	 * Handles an incoming REST request using the specified router, logger, and error response factory.
+	 *
+	 * @param routerType The type of the router to use for routing the request.
+	 * @param loggerType The type of the logger to use for logging REST-related information (optional, can be null).
+	 * @param errorResponseFactoryType The type of the error response factory to use for creating error responses (optional, can be null).
+	 */
+	public static void handleRequest(Type routerType, Type loggerType, Type errorResponseFactoryType) {
+		IRestResponse response;
+		IErrorResponseFactory errorResponseFactory;
+		IRestLogger restLogger;
+		try {
+			errorResponseFactory = (IErrorResponseFactory)errorResponseFactoryType?.newInstance();
+			restLogger = (IRestLogger)loggerType?.newInstance();
+			restLogger?.initLog(RestContext.request);
+			RestRouter router = ((RestRouter)routerType.newInstance()).setRoutes();
+			RestProcessor processor = router
+			.newRestProcessor(RestContext.request, errorResponseFactory, restLogger);
+			response = processor.process();
+		} catch (Exception exc) {
+			response = errorResponseFactory.newErrorRestResponse(exc);
+			restLogger?.addErrorDetails(exc);
+		} finally {
+			response.sendResponse();
+			restLogger?.createLog();
+		}
 	}
 
 	/**
@@ -51,6 +88,7 @@ public class RestFramework {
 	 * The `IRestLogger` interface defines methods for logging REST-related information.
 	 */
 	public interface IRestLogger {
+		void initLog(RestRequest request);
 		void addErrorDetails(Exception exc);
 		void createLog();
 	}

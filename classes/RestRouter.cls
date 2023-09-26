@@ -3,41 +3,17 @@
  * on the requested URI. It maintains a mapping of routes to `RestProcessor` types and dynamically creates instances
  * of the appropriate processor.
  */
-public virtual class RestRouter implements RestFramework.IRestRouter {
+public abstract class RestRouter {
 	protected Map<String, Type> routeToRestProcessorType;
 
 	/**
-	 * Constructs a new `RestRouter` instance with a mapping of routes to `RestProcessor` types.
+	 * Sets the routes for the `RestRouter`.
+	 * Implement this method to define the routing logic.
+	 * Implement to set the value for the `routeToRestProcessorType` property as <route>:<RestProcessor type>
 	 *
-	 * @param routeToRestProcessorType A map of routes to corresponding `RestProcessor` types.
+	 * @return The current `RestRouter` instance.
 	 */
-	public RestRouter(Map<String, Type> routeToRestProcessorType) {
-		this.routeToRestProcessorType = routeToRestProcessorType;
-	}
-
-	/**
-	 * Creates a new `RestProcessor` instance for handling the incoming REST request without a custom error response factory
-	 * and logger. This method provides a convenient way to create a `RestProcessor` with default error handling and logging.
-	 *
-	 * @param request The `RestRequest` object representing the incoming HTTP request.
-	 * @return A new `RestProcessor` instance configured to handle the specified REST request.
-	 * @throws RestFramework.InvalidUriException If the requested URI does not match any defined routes.
-	 */
-	public RestProcessor newRestProcessor(RestRequest request) {
-		return this.newRestProcessor(request, new ErrorResponseFactory(), null);
-	}
-
-	/**
-	 * Creates a new `RestProcessor` instance for handling the incoming REST request with a custom REST logger.
-	 *
-	 * @param request    The `RestRequest` object representing the incoming HTTP request.
-	 * @param restLogger The custom REST logger to use for logging REST-related information.
-	 * @return A new `RestProcessor` instance configured to handle the specified REST request with custom logging.
-	 * @throws RestFramework.InvalidUriException If the requested URI does not match any defined routes.
-	 */
-	public RestProcessor newRestProcessor(RestRequest request, RestFramework.IRestLogger restLogger) {
-		return this.newRestProcessor(request, new ErrorResponseFactory(), restLogger);
-	}
+	abstract public RestRouter setRoutes();
 
 	/**
 	 * Creates a new `RestProcessor` instance for handling the incoming REST request with a custom error response factory

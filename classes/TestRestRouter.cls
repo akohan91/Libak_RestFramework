@@ -1,87 +1,14 @@
 @IsTest
 public with sharing class TestRestRouter {
-	@IsTest
-	static void testNewRestProcessorWithRequestOnly(){
-		RestRequest request = new RestRequest();
-		String uriTemplate = '/testRestRouter/:uriParam';
-		request.requestURI = '/testRestRouter/param_1';
-		RestContext.request = request;
-		RestFramework.IRestRouter router = new RestRouter(new Map<String, Type>{
-			uriTemplate => RestProcessor.class
-		});
 
-		Test.startTest();
-
-		RestProcessor processor = router.newRestProcessor(request);
-
-		Test.stopTest();
-
-		System.assertEquals(
-			request,
-			processor.request,
-			'Wrong "request" property of RestProcessor instance.'
-		);
-		System.assertEquals(
-			uriTemplate,
-			processor.uriTemplate,
-			'Wrong "uriTemplate" property of RestProcessor instance.'
-		);
-		System.assert(
-			processor.errorResponseFactory instanceOf ErrorResponseFactory,
-			'Wrong "errorResponseFactory" property of RestProcessor instance.'
-		);
-		System.assertEquals(
-			null,
-			processor.restLogger,
-			'Wrong "restLogger" property of RestProcessor instance.'
-		);
-	}
-
-	@IsTest
-	static void testNewRestProcessorWithCustomLogger(){
-		RestRequest request = new RestRequest();
-		String uriTemplate = '/testRestRouter/:uriParam';
-		request.requestURI = '/testRestRouter/param_1';
-		RestContext.request = request;
-		RestFramework.IRestRouter router = new RestRouter(new Map<String, Type>{
-			uriTemplate => RestProcessor.class
-		});
-
-		Test.startTest();
-
-		RestProcessor processor = router.newRestProcessor(request, new TestRestLogger());
-
-		Test.stopTest();
-
-		System.assertEquals(
-			request,
-			processor.request,
-			'Wrong "request" property of RestProcessor instance.'
-		);
-		System.assertEquals(
-			uriTemplate,
-			processor.uriTemplate,
-			'Wrong "uriTemplate" property of RestProcessor instance.'
-		);
-		System.assert(
-			processor.errorResponseFactory instanceOf ErrorResponseFactory,
-			'Wrong "errorResponseFactory" property of RestProcessor instance.'
-		);
-		System.assert(
-			processor.restLogger instanceOf TestRestLogger,
-			'Wrong "errorResponseFactory" property of RestProcessor instance.'
-		);
-	}
+	public static final String URI_TEMPLATE = '/testRestRouter/:uriParam';
 
 	@IsTest
 	static void testNewRestProcessorWithCustomLoggerAndErrorResponseFactory(){
 		RestRequest request = new RestRequest();
-		String uriTemplate = '/testRestRouter/:uriParam';
 		request.requestURI = '/testRestRouter/param_1';
 		RestContext.request = request;
-		RestFramework.IRestRouter router = new RestRouter(new Map<String, Type>{
-			uriTemplate => RestProcessor.class
-		});
+		RestRouter router = new RestRouterInstance().setRoutes();
 
 		Test.startTest();
 
@@ -99,7 +26,7 @@ public with sharing class TestRestRouter {
 			'Wrong "request" property of RestProcessor instance.'
 		);
 		System.assertEquals(
-			uriTemplate,
+			URI_TEMPLATE,
 			processor.uriTemplate,
 			'Wrong "uriTemplate" property of RestProcessor instance.'
 		);
@@ -116,17 +43,18 @@ public with sharing class TestRestRouter {
 	@IsTest
 	static void testNewRestProcessorInvalidUriException(){
 		RestRequest request = new RestRequest();
-		String uriTemplate = '/testRestRouter/:uriParam';
 		request.requestURI = '/invalidURI';
 		RestContext.request = request;
-		RestFramework.IRestRouter router = new RestRouter(new Map<String, Type>{
-			uriTemplate => RestProcessor.class
-		});
+		RestRouter router = new RestRouterInstance().setRoutes();
 
 		Test.startTest();
 
 		try {
-			RestProcessor processor = router.newRestProcessor(request);
+			RestProcessor processor = router.newRestProcessor(
+				request,
+				new TestErrorResponseFactory(),
+				new TestRestLogger()
+			);
 			throw new TestCustomException('Go in to catch block.');
 		} catch (Exception exc) {
 			System.assertEquals(
@@ -143,7 +71,17 @@ public with sharing class TestRestRouter {
 		Test.stopTest();
 	}
 
+	private class RestRouterInstance extends RestRouter {
+		override public RestRouter setRoutes() {
+			this.routeToRestProcessorType = new Map<String, Type>{
+				URI_TEMPLATE => RestProcessor.class
+			};
+			return this;
+		}
+	}
+
 	private class TestRestLogger implements RestFramework.IRestLogger {
+		public void initLog(RestRequest request) {}
 		public void addErrorDetails(Exception exc) {}
 		public void createLog() {}
 	}

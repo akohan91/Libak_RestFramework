@@ -10,10 +10,13 @@
     - [Content Types](#content-types)
     - [Error Messages](#error-messages)
   - [`Interfaces`](#interfaces)
-    - [RestFramework.IRestRouter](#restframeworkirestrouter)
     - [RestFramework.IRestResponse](#restframeworkirestresponse)
     - [RestFramework.IErrorResponseFactory](#restframeworkierrorresponsefactory)
     - [RestFramework.IRestLogger](#restframeworkirestlogger)
+  - [`Public static methods`](#public-static-methods)
+      - [`handleRequest(Type routerType)`](#handlerequesttype-routertype)
+      - [`handleRequest(Type routerType, Type loggerType)`](#handlerequesttype-routertype-type-loggertype)
+      - [`handleRequest(Type routerType, Type loggerType, Type errorResponseFactoryType)`](#handlerequesttype-routertype-type-loggertype-type-errorresponsefactorytype)
   - [`RestProcessor class`](#restprocessor-class)
     - [Constructors](#constructors)
       - [`RestProcessor()`](#restprocessor)
@@ -37,11 +40,9 @@
       - [`parseUriParams()`](#parseuriparams)
       - [`throwMethodNotAllowedException()`](#throwmethodnotallowedexception)
   - [`RestRouter class`](#restrouter-class)
-    - [Constructors](#constructors-1)
-      - [`RestRouter(Map<String, Type> routeToRestProcessorType)`](#restroutermapstring-type-routetorestprocessortype)
+    - [Abstract methods](#abstract-methods)
+      - [`setRoutes()`](#setroutes)
     - [Public methods](#public-methods-1)
-      - [`newRestProcessor(RestRequest request)`](#newrestprocessorrestrequest-request)
-      - [`newRestProcessor(RestRequest request, RestFramework.IRestLogger restLogger)`](#newrestprocessorrestrequest-request-restframeworkirestlogger-restlogger)
       - [`newRestProcessor(RestRequest request, RestFramework.IErrorResponseFactory errorResponseFactory, RestFramework.IRestLogger restLogger)`](#newrestprocessorrestrequest-request-restframeworkierrorresponsefactory-errorresponsefactory-restframeworkirestlogger-restlogger)
     - [Private Methods](#private-methods-1)
       - [`isRouteExists(String route, String requestURI)`](#isrouteexistsstring-route-string-requesturi)
@@ -49,7 +50,7 @@
     - [Public Methods](#public-methods-2)
       - [`newErrorRestResponse(Exception exc)`](#newerrorrestresponseexception-exc)
   - [`SuccessResponse class`](#successresponse-class)
-    - [Constructors](#constructors-2)
+    - [Constructors](#constructors-1)
       - [`SuccessResponse(String data)`](#successresponsestring-data)
       - [`SuccessResponse(Blob data)`](#successresponseblob-data)
       - [`SuccessResponse(Integer statusCode, String data)`](#successresponseinteger-statuscode-string-data)
@@ -59,7 +60,7 @@
       - [`addHeader(String key, String value)`](#addheaderstring-key-string-value)
       - [`sendResponse()`](#sendresponse)
   - [`JsonResponse class`](#jsonresponse-class)
-    - [Constructors](#constructors-3)
+    - [Constructors](#constructors-2)
       - [`JsonResponse(String data)`](#jsonresponsestring-data)
       - [`JsonResponse(Object data)`](#jsonresponseobject-data)
       - [`JsonResponse(Integer statusCode, String data)`](#jsonresponseinteger-statuscode-string-data)
@@ -68,13 +69,14 @@
       - [`addHeader(String key, String value)`](#addheaderstring-key-string-value-1)
       - [`sendResponse()`](#sendresponse-1)
   - [`ErrorResponse class`](#errorresponse-class)
-    - [Constructors](#constructors-4)
+    - [Constructors](#constructors-3)
       - [`ErrorResponse(Integer statusCode, String summary, String details)`](#errorresponseinteger-statuscode-string-summary-string-details)
       - [`ErrorResponse(Integer status, String summary, Exception exc)`](#errorresponseinteger-status-string-summary-exception-exc)
       - [`ErrorResponse(Integer status, Exception exc)`](#errorresponseinteger-status-exception-exc)
     - [Public Methods](#public-methods-5)
       - [`sendResponse()`](#sendresponse-2)
   - [`Custom Exceptions`](#custom-exceptions)
+  - [`Demo of usage`](#demo-of-usage)
 
 ## `Overview`
 
@@ -109,14 +111,6 @@ The `RestFramework` class provides a structured framework for building RESTful w
 
 ## `Interfaces`
 
-### RestFramework.IRestRouter
-
-The `RestFramework.IRestRouter` interface defines methods for creating REST processors.
-
-- `newRestProcessor(RestRequest request): RestProcessor`: Creates a new `RestProcessor` instance for handling the incoming REST request.
-- `newRestProcessor(RestRequest request, RestFramework.IRestLogger restLogger): RestProcessor`: Creates a new `RestProcessor` instance with a custom REST logger.
-- `newRestProcessor(RestRequest request, RestFramework.IErrorResponseFactory errorResponseFactory, RestFramework.IRestLogger restLogger): RestProcessor`: Creates a new `RestProcessor` instance with custom error response factory and REST logger.
-
 ### RestFramework.IRestResponse
 
 The `RestFramework.IRestResponse` interface defines a method for sending REST responses.
@@ -135,6 +129,31 @@ The `RestFramework.IRestLogger` interface defines methods for logging REST-relat
 
 - `addErrorDetails(Exception exc): void`: Adds error details to the logger.
 - `createLog(): void`: Creates a log.
+
+## `Public static methods`
+
+#### `handleRequest(Type routerType)`
+
+Handles an incoming REST request using the specified router.
+
+- Parameters:
+  - `routerType` (Type): The type of the router to use for routing the request.
+
+#### `handleRequest(Type routerType, Type loggerType)`
+
+Handles an incoming REST request using the specified router and logger.
+
+- Parameters:
+  - `routerType` (Type): The type of the router to use for routing the request.
+  - `loggerType` (Type): The type of the logger to use for logging REST-related information (optional, can be null).
+#### `handleRequest(Type routerType, Type loggerType, Type errorResponseFactoryType)`
+
+Handles an incoming REST request using the specified router, logger, and error response factory.
+
+- Parameters:
+  - `routerType` (Type): The type of the router to use for routing the request.
+  - `loggerType` (Type): The type of the logger to use for logging REST-related information (optional, can be null).
+  - `errorResponseFactoryType` (Type): The type of the error response factory to use for creating error responses (optional, can be null).
 
 ---
 
@@ -276,35 +295,15 @@ Throws a `RestFramework.MethodNotAllowedException` with a message indicating tha
 The `RestRouter` class is responsible for routing incoming REST requests to the appropriate `RestProcessor` based on the requested URI. It maintains a mapping of routes to `RestProcessor` types and dynamically creates instances of the appropriate processor.
 Certainly, here's the API reference documentation for the `RestRouter` class:
 
-### Constructors
+### Abstract methods
 
-#### `RestRouter(Map<String, Type> routeToRestProcessorType)`
+#### `setRoutes()`
 
-Constructs a new `RestRouter` instance with a mapping of routes to `RestProcessor` types.
+Sets the routes for the `RestRouter`. Implement this method to define the routing logic. Implement to set the value for the `routeToRestProcessorType` property as <route>:<RestProcessor type>
 
-- Parameters:
-  - `routeToRestProcessorType` (Map<String, Type>): A map of routes to corresponding `RestProcessor` types.
+- Returns: The current `RestRouter` instance.
 
 ### Public methods
-
-#### `newRestProcessor(RestRequest request)`
-
-Creates a new `RestProcessor` instance for handling the incoming REST request without a custom error response factory and logger. This method provides a convenient way to create a `RestProcessor` with default error handling and logging.
-
-- Parameters:
-  - `request` (RestRequest): The `RestRequest` object representing the incoming HTTP request.
-- Returns: A new `RestProcessor` instance configured to handle the specified REST request.
-- Throws: `RestFramework.InvalidUriException` - If the requested URI does not match any defined routes.
-
-#### `newRestProcessor(RestRequest request, RestFramework.IRestLogger restLogger)`
-
-Creates a new `RestProcessor` instance for handling the incoming REST request with a custom REST logger.
-
-- Parameters:
-  - `request` (RestRequest): The `RestRequest` object representing the incoming HTTP request.
-  - `restLogger` (RestFramework.IRestLogger): The custom REST logger to use for logging REST-related information.
-- Returns: A new `RestProcessor` instance configured to handle the specified REST request with custom logging.
-- Throws: `RestFramework.InvalidUriException` - If the requested URI does not match any defined routes.
 
 #### `newRestProcessor(RestRequest request, RestFramework.IErrorResponseFactory errorResponseFactory, RestFramework.IRestLogger restLogger)`
 
@@ -505,3 +504,123 @@ Sends the error response with the configured status code, summary, and details. 
 - `RestFramework.InvalidUriException`: Exception class for invalid URIs.
 - `RestFramework.NotFoundException`: Exception class for not found resources.
 - `RestFramework.MethodNotAllowedException`: Exception class for unsupported HTTP methods.
+
+---
+
+## `Demo of usage`
+
+```java
+@RestResource(UrlMapping='/*/accounts/*')
+global with sharing class DemoRestFramework {
+
+	@HttpGet
+	global static void doGet() {
+		RestFramework.handleRequest(AccountRestRouter.class);
+	}
+	@HttpPost
+	global static void doPost() {
+		RestFramework.handleRequest(AccountRestRouter.class);
+	}
+	@HttpPut
+	global static void doPut() {
+		RestFramework.handleRequest(AccountRestRouter.class);
+	}
+	@HttpDelete
+	global static void doDelete() {
+		RestFramework.handleRequest(AccountRestRouter.class);
+	}
+
+	public class AccountRestRouter extends RestRouter {
+		override public RestRouter setRoutes() {
+			this.routeToRestProcessorType = new Map<String, Type>{
+				'/v1/accounts' => AccountProcessorV1.class,
+				'/v1/accounts/:accountId' => AccountProcessorV1.class,
+				'/v2/accounts' => AccountProcessorV2.class,
+				'/v2/accounts/:accountId' => AccountProcessorV2.class
+			};
+			return this;
+		}
+	}
+
+	public virtual with sharing class AccountProcessorV1 extends RestProcessor {
+		protected virtual override RestFramework.IRestResponse handleGet() {
+			String accountId = this.getUriParam('accountId');
+			List<Account> accounts = [SELECT Id, Name, Phone, BillingStreet, BillingCity, BillingState, BillingPostalCode FROM Account WHERE Id = :accountId];
+
+			if (accounts != null && !accounts.isEmpty()) {
+				return new JsonResponse(accounts.get(0));
+			} else {
+				throw new RestFramework.NotFoundException('Account not found');
+			}
+		}
+
+		protected override RestFramework.IRestResponse handlePost() {
+			Account newAccount = (Account)JSON.deserialize(this.request.requestBody.toString(), Account.class);
+			insert newAccount;
+
+			return new JsonResponse(newAccount);
+		}
+
+		protected override RestFramework.IRestResponse handlePut() {
+			String accountId = this.getUriParam('accountId');
+			List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
+
+			if (!existingAccounts.isEmpty()) {
+				Account updatedAccount = (Account)JSON.deserialize(this.request.requestBody.toString(), Account.class);
+				updatedAccount.Id = accountId;
+				update updatedAccount;
+
+				return new JsonResponse(updatedAccount);
+			} else {
+				throw new RestFramework.NotFoundException('Account not found');
+			}
+		}
+
+		protected override RestFramework.IRestResponse handleDelete() {
+			String accountId = this.getUriParam('accountId');
+			List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
+
+			if (!existingAccounts.isEmpty()) {
+				delete existingAccounts.get(0);
+
+				return new SuccessResponse('Account deleted successfully');
+			} else {
+				throw new RestFramework.NotFoundException('Account not found');
+			}
+		}
+	}
+
+	public with sharing class AccountProcessorV2 extends AccountProcessorV1 {
+		protected override RestFramework.IRestResponse handleGet() {
+			String accId = this.getUriParam('accountId');
+			if (String.isBlank(accId)) {
+				Integer limitNumber = this.request.params.containsKey('limit') ? Integer.valueOf(this.request.params.get('limit')) : 10;
+				Integer offsetNumber = this.request.params.containsKey('offset') ? Integer.valueOf(this.request.params.get('offset')) : 0;
+				return this.getAccounts(limitNumber, offsetNumber);
+			} else {
+				return this.getAccountById(accId);
+			}
+		}
+
+		private RestFramework.IRestResponse getAccountById(String accId) {
+			List<Account> accounts = [SELECT Id, Name, Phone, BillingStreet, BillingCity, BillingState, BillingPostalCode FROM Account WHERE Id = :accId];
+
+			if (!accounts.isEmpty()) {
+				return new JsonResponse(accounts.get(0));
+			} else {
+				throw new RestFramework.NotFoundException('No accounts found');
+			}
+		}
+
+		private RestFramework.IRestResponse getAccounts(Integer limitNumber, Integer offsetNumber) {
+			List<Account> accounts = [SELECT Id, Name, Phone, BillingStreet, BillingCity, BillingState, BillingPostalCode FROM Account LIMIT :limitNumber OFFSET :offsetNumber];
+
+			if (!accounts.isEmpty()) {
+				return new JsonResponse(accounts);
+			} else {
+				throw new RestFramework.NotFoundException('No accounts found');
+			}
+		}
+	}
+}
+```
