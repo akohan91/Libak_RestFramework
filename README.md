@@ -1,3 +1,5 @@
+![LibAK logo](assets/small_logo.png)
+
 # RestFramework - Salesforce Apex REST Framework
 
 # Table of Contents
@@ -82,7 +84,7 @@
 
 The `RestFramework` class provides a structured framework for building RESTful web services in Salesforce Apex. It includes interfaces for routing, response handling, error management, and logging, along with core components for processing RESTful requests.
 
-![RestFramework UML diagram](../assets/RestFrameworkUML.png)
+![RestFramework UML diagram](assets/RestFrameworkUML.png)
 
 ## `Constants`
 
