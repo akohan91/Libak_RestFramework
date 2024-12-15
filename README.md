@@ -1,6 +1,29 @@
-![LibAK logo](assets/small_logo.png)
-
 # RestFramework - Salesforce Apex REST Framework
+
+<span>
+  <img
+    alt="Deploy to Salesforce"
+    src="assets/small_logo.png"
+    height="28px"
+  >
+</span>
+<a href="https://githubsfdeploy.herokuapp.com?owner=akohan91&repo=Libak_RestFramework&ref=main">
+  <img
+    alt="Deploy to Salesforce"
+    src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png"
+    height="28px"
+  >
+</a>
+<a href="https://www.linkedin.com/pulse/mastering-rest-framework-building-robust-restful-web-apex-andrei-wefqe">
+  <img
+    alt="akohan91 | LinkedIn"
+    src="https://cdn.simpleicons.org/linkedin/black/white"
+    height="28px"
+  >
+</a>
+
+---------------------------------------------------------------------------------------------------------------
+
 
 - [`Overview`](#overview)
 - [`Constants`](#constants)
