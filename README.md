@@ -17,7 +17,7 @@
 <a href="https://www.linkedin.com/pulse/mastering-rest-framework-building-robust-restful-web-apex-andrei-wefqe">
   <img
     alt="akohan91 | LinkedIn"
-    src="https://cdn.simpleicons.org/linkedin/black/white"
+    src="https://cdn.simpleicons.org/linkedin"
     height="28px"
   >
 </a>
