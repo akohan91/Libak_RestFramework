@@ -1,5 +1,5 @@
 @IsTest
-public with sharing class TestRestFramework {
+public with sharing class libak_TestRestFramework {
 
 	public static final String URI_TEMPLATE = '/testRestFramework/:uriParam';
 
@@ -12,12 +12,12 @@ public with sharing class TestRestFramework {
 
 		Test.startTest();
 
-		RestFramework.handleRequest(RestRouterInstance.class);
+		libak_RestFramework.handleRequest(RestRouterInstance.class);
 
 		Test.stopTest();
 
 		System.assertEquals(
-			RestFramework.HTTP_CODE_METHOD_NOT_ALLOWED,
+			libak_RestFramework.HTTP_CODE_METHOD_NOT_ALLOWED,
 			RestContext.response.statusCode,
 			'The status code of response should be 405'
 		);
@@ -32,31 +32,31 @@ public with sharing class TestRestFramework {
 
 		Test.startTest();
 
-		RestFramework.handleRequest(String.class);
+		libak_RestFramework.handleRequest(String.class);
 
 		Test.stopTest();
 
 		System.assertEquals(
-			RestFramework.HTTP_CODE_INTERNAL_SERVER_ERROR,
+			libak_RestFramework.HTTP_CODE_INTERNAL_SERVER_ERROR,
 			RestContext.response.statusCode,
 			'The status code of response should be 500'
 		);
 
-		ErrorResponse errorResponse = (ErrorResponse)JSON.deserialize(
+		libak_ErrorResponse errorResponse = (libak_ErrorResponse)JSON.deserialize(
 			RestContext.response.responseBody.toString(),
-			ErrorResponse.class
+			libak_ErrorResponse.class
 		);
 		System.assertEquals(
-			RestFramework.ERROR_MESSAGE_INTERNAL_SERVER_ERROR,
+			libak_RestFramework.ERROR_MESSAGE_INTERNAL_SERVER_ERROR,
 			errorResponse.summary,
 			'The summary property of response is wrong.'
 		);
 	}
 
-	private class RestRouterInstance extends RestRouter {
-		override public RestRouter setRoutes() {
+	private class RestRouterInstance extends libak_RestRouter {
+		override public libak_RestRouter setRoutes() {
 			this.routeToRestProcessorType = new Map<String, Type>{
-				URI_TEMPLATE => RestProcessor.class
+				URI_TEMPLATE => libak_RestProcessor.class
 			};
 			return this;
 		}

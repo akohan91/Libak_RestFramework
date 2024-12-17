@@ -1,5 +1,5 @@
 @IsTest
-public with sharing class TestJsonResponse {
+public with sharing class libak_TestJsonResponse {
 
 	private static final Map<String, String> TEST_RESPONSE_DATA = new Map<String, String>{
 		'property_1' => 'value_1'
@@ -9,7 +9,7 @@ public with sharing class TestJsonResponse {
 	static void testConstructorStringData(){
 		RestContext.response = new RestResponse();
 		String stringResponseData = JSON.serialize(TEST_RESPONSE_DATA);
-		RestFramework.IRestResponse response = new JsonResponse(stringResponseData);
+		libak_RestFramework.IRestResponse response = new libak_JsonResponse(stringResponseData);
 
 		Test.startTest();
 
@@ -18,16 +18,16 @@ public with sharing class TestJsonResponse {
 		Test.stopTest();
 
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_OK,
+			libak_RestFramework.HTTP_CODE_OK,
 			RestContext.response.statusCode,
 			'The status code of response should be 200'
 		);
@@ -41,7 +41,7 @@ public with sharing class TestJsonResponse {
 	@IsTest
 	static void testConstructorObjectData(){
 		RestContext.response = new RestResponse();
-		RestFramework.IRestResponse response = new JsonResponse(TEST_RESPONSE_DATA);
+		libak_RestFramework.IRestResponse response = new libak_JsonResponse(TEST_RESPONSE_DATA);
 
 		Test.startTest();
 
@@ -51,16 +51,16 @@ public with sharing class TestJsonResponse {
 
 		String stringResponseData = JSON.serialize(TEST_RESPONSE_DATA);
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_OK,
+			libak_RestFramework.HTTP_CODE_OK,
 			RestContext.response.statusCode,
 			'The status code of response should be 200'
 		);
@@ -75,7 +75,7 @@ public with sharing class TestJsonResponse {
 	static void testConstructorStatusCodeAndStringData(){
 		RestContext.response = new RestResponse();
 		String stringResponseData = JSON.serialize(TEST_RESPONSE_DATA);
-		RestFramework.IRestResponse response = new JsonResponse(RestFramework.HTTP_CODE_BAD_REQUEST, stringResponseData);
+		libak_RestFramework.IRestResponse response = new libak_JsonResponse(libak_RestFramework.HTTP_CODE_BAD_REQUEST, stringResponseData);
 
 		Test.startTest();
 
@@ -84,16 +84,16 @@ public with sharing class TestJsonResponse {
 		Test.stopTest();
 
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_BAD_REQUEST,
+			libak_RestFramework.HTTP_CODE_BAD_REQUEST,
 			RestContext.response.statusCode,
 			'The status code of response should be 400'
 		);
@@ -107,7 +107,7 @@ public with sharing class TestJsonResponse {
 	@IsTest
 	static void testConstructorStatusCodeAndObjectData(){
 		RestContext.response = new RestResponse();
-		RestFramework.IRestResponse response = new JsonResponse(RestFramework.HTTP_CODE_BAD_REQUEST, TEST_RESPONSE_DATA);
+		libak_RestFramework.IRestResponse response = new libak_JsonResponse(libak_RestFramework.HTTP_CODE_BAD_REQUEST, TEST_RESPONSE_DATA);
 
 		Test.startTest();
 
@@ -117,16 +117,16 @@ public with sharing class TestJsonResponse {
 
 		String stringResponseData = JSON.serialize(TEST_RESPONSE_DATA);
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_BAD_REQUEST,
+			libak_RestFramework.HTTP_CODE_BAD_REQUEST,
 			RestContext.response.statusCode,
 			'The status code of response should be 400'
 		);
@@ -140,7 +140,7 @@ public with sharing class TestJsonResponse {
 	@IsTest
 	static void testSendResponse(){
 		RestContext.response = new RestResponse();
-		RestFramework.IRestResponse response = new JsonResponse(TEST_RESPONSE_DATA);
+		libak_RestFramework.IRestResponse response = new libak_JsonResponse(TEST_RESPONSE_DATA);
 
 		Test.startTest();
 
@@ -150,16 +150,16 @@ public with sharing class TestJsonResponse {
 
 		String stringResponseData = JSON.serialize(TEST_RESPONSE_DATA);
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_OK,
+			libak_RestFramework.HTTP_CODE_OK,
 			RestContext.response.statusCode,
 			'The status code of response should be 200'
 		);

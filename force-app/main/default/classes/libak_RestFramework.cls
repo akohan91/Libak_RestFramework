@@ -1,9 +1,9 @@
 /**
- * The `RestFramework` class provides a structured framework for building RESTful web services in Salesforce Apex.
+ * The `libak_RestFramework` class provides a structured framework for building RESTful web services in Salesforce Apex.
  * It includes interfaces for routing, response handling, error management, and logging, along with core components
  * for processing RESTful requests.
  */
-public class RestFramework {
+public class libak_RestFramework {
 	// Constants for HTTP status codes
 	public static final Integer HTTP_CODE_OK = 200;
 	public static final Integer HTTP_CODE_BAD_REQUEST = 400;
@@ -39,7 +39,7 @@ public class RestFramework {
 	 * @param loggerType The type of the logger to use for logging REST-related information (optional, can be null).
 	 */
 	public static void handleRequest(Type routerType, Type loggerType) {
-		handleRequest(routerType, loggerType, ErrorResponseFactory.class);
+		handleRequest(routerType, loggerType, libak_ErrorResponseFactory.class);
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class RestFramework {
 			errorResponseFactory = (IErrorResponseFactory)errorResponseFactoryType?.newInstance();
 			restLogger = (IRestLogger)loggerType?.newInstance();
 			restLogger?.initLog(RestContext.request);
-			RestRouter router = ((RestRouter)routerType.newInstance()).setRoutes();
-			RestProcessor processor = router
+			libak_RestRouter router = ((libak_RestRouter)routerType.newInstance()).setRoutes();
+			libak_RestProcessor processor = router
 			.newRestProcessor(RestContext.request, errorResponseFactory, restLogger);
 			response = processor.process();
 		} catch (Exception exc) {

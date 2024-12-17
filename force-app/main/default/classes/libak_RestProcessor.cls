@@ -1,9 +1,9 @@
 /**
- * The `RestProcessor` class serves as the base class for implementing specific REST processors.
+ * The `libak_RestProcessor` class serves as the base class for implementing specific REST processors.
  * It includes methods for handling different HTTP methods, parsing URI parameters, and managing errors.
- * @return   {RestFramework.IRestResponse}
+ * @return   {libak_RestFramework.IRestResponse}
  */
-public virtual class RestProcessor {
+public virtual class libak_RestProcessor {
 	@TestVisible
 	protected RestRequest request;
 	@TestVisible
@@ -11,21 +11,21 @@ public virtual class RestProcessor {
 	@TestVisible
 	private Map<String, String> uriParamsMap;
 	@TestVisible
-	private RestFramework.IErrorResponseFactory errorResponseFactory;
+	private libak_RestFramework.IErrorResponseFactory errorResponseFactory;
 	@TestVisible
-	private RestFramework.IRestLogger restLogger;
+	private libak_RestFramework.IRestLogger restLogger;
 
 	/**
 	 * Processes the incoming REST request by handling different HTTP methods and managing errors.
 	 *
 	 * This method is the entry point for processing incoming REST requests. It dynamically dispatches the request
 	 * to the appropriate handler based on the HTTP method (GET, POST, PUT, PATCH, DELETE). If an unsupported
-	 * HTTP method is received, it throws a RestFramework.MethodNotAllowedException.
+	 * HTTP method is received, it throws a libak_RestFramework.MethodNotAllowedException.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the REST request.
-	 * @throws RestFramework.MethodNotAllowedException If the incoming HTTP method is not supported for this resource.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the REST request.
+	 * @throws libak_RestFramework.MethodNotAllowedException If the incoming HTTP method is not supported for this resource.
 	 */
-	public RestFramework.IRestResponse process() {
+	public libak_RestFramework.IRestResponse process() {
 		try {
 			switch on(String) this.request.httpMethod {
 				when 'GET' {
@@ -54,49 +54,49 @@ public virtual class RestProcessor {
 	}
 
 	/**
-	 * Sets the URI template for this `RestProcessor`. The URI template defines the expected structure
+	 * Sets the URI template for this `libak_RestProcessor`. The URI template defines the expected structure
 	 * of the incoming URI, including any URI parameters.
 	 *
 	 * @param uriTemplate The URI template to set, in the format "/service/resource/:paramName".
 	 *                    The colon (:) is used to denote URI parameters, and the parameter name is
 	 *                    used as the key for mapping URI values.
-	 * @return The current `RestProcessor` instance with the URI template set.
+	 * @return The current `libak_RestProcessor` instance with the URI template set.
 	 */
-	public RestProcessor useUriTemplate(String uriTemplate) {
+	public libak_RestProcessor useUriTemplate(String uriTemplate) {
 		this.uriTemplate = uriTemplate;
 		return this;
 	}
 
 	/**
-	 * Sets the REST request for this `RestProcessor`. The REST request contains information about the incoming
+	 * Sets the REST request for this `libak_RestProcessor`. The REST request contains information about the incoming
 	 * HTTP request, including the HTTP method, headers, and request parameters.
 	 *
 	 * @param request The `RestRequest` object representing the incoming HTTP request.
-	 * @return The current `RestProcessor` instance with the specified REST request set.
+	 * @return The current `libak_RestProcessor` instance with the specified REST request set.
 	 */
-	public RestProcessor useRestRequest(RestRequest request) {
+	public libak_RestProcessor useRestRequest(RestRequest request) {
 		this.request = request;
 		return this;
 	}
 
 	/**
-	 * Sets the error response factory for this `RestProcessor`.
+	 * Sets the error response factory for this `libak_RestProcessor`.
 	 *
 	 * @param errorResponseFactory The error response factory to use.
-	 * @return The current `RestProcessor` instance.
+	 * @return The current `libak_RestProcessor` instance.
 	 */
-	public RestProcessor useErrorResponseFactory(RestFramework.IErrorResponseFactory errorResponseFactory) {
+	public libak_RestProcessor useErrorResponseFactory(libak_RestFramework.IErrorResponseFactory errorResponseFactory) {
 		this.errorResponseFactory = errorResponseFactory;
 		return this;
 	}
 
 	/**
-	 * Sets the REST logger for this `RestProcessor`.
+	 * Sets the REST logger for this `libak_RestProcessor`.
 	 *
 	 * @param restLogger The REST logger to use.
-	 * @return The current `RestProcessor` instance.
+	 * @return The current `libak_RestProcessor` instance.
 	 */
-	public RestProcessor useRestLogger(RestFramework.IRestLogger restLogger) {
+	public libak_RestProcessor useRestLogger(libak_RestFramework.IRestLogger restLogger) {
 		this.restLogger = restLogger;
 		return this;
 	}
@@ -107,12 +107,12 @@ public virtual class RestProcessor {
 	 * Handles the HTTP GET method for processing REST requests. Override this method in a subclass to implement
 	 * custom GET request handling logic.
 	 *
-	 * If this method is called without being overridden in a subclass, it will throw a RestFramework.MethodNotAllowedException
+	 * If this method is called without being overridden in a subclass, it will throw a libak_RestFramework.MethodNotAllowedException
 	 * indicating that the GET method is not supported for this resource.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the GET request.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the GET request.
 	 */
-	protected virtual RestFramework.IRestResponse handleGet() {
+	protected virtual libak_RestFramework.IRestResponse handleGet() {
 		this.throwMethodNotAllowedException();
 		return null;
 	}
@@ -121,12 +121,12 @@ public virtual class RestProcessor {
 	 * Handles the HTTP POST method for processing REST requests. Override this method in a subclass to implement
 	 * custom POST request handling logic.
 	 *
-	 * If this method is called without being overridden in a subclass, it will throw a RestFramework.MethodNotAllowedException
+	 * If this method is called without being overridden in a subclass, it will throw a libak_RestFramework.MethodNotAllowedException
 	 * indicating that the POST method is not supported for this resource.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the POST request.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the POST request.
 	 */
-	protected virtual RestFramework.IRestResponse handlePost() {
+	protected virtual libak_RestFramework.IRestResponse handlePost() {
 		this.throwMethodNotAllowedException();
 		return null;
 	}
@@ -135,12 +135,12 @@ public virtual class RestProcessor {
 	 * Handles the HTTP PUT method for processing REST requests. Override this method in a subclass to implement
 	 * custom PUT request handling logic.
 	 *
-	 * If this method is called without being overridden in a subclass, it will throw a RestFramework.MethodNotAllowedException
+	 * If this method is called without being overridden in a subclass, it will throw a libak_RestFramework.MethodNotAllowedException
 	 * indicating that the PUT method is not supported for this resource.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the PUT request.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the PUT request.
 	 */
-	protected virtual RestFramework.IRestResponse handlePut() {
+	protected virtual libak_RestFramework.IRestResponse handlePut() {
 		this.throwMethodNotAllowedException();
 		return null;
 	}
@@ -149,12 +149,12 @@ public virtual class RestProcessor {
 	 * Handles the HTTP PATCH method for processing REST requests. Override this method in a subclass to implement
 	 * custom PATCH request handling logic.
 	 *
-	 * If this method is called without being overridden in a subclass, it will throw a RestFramework.MethodNotAllowedException
+	 * If this method is called without being overridden in a subclass, it will throw a libak_RestFramework.MethodNotAllowedException
 	 * indicating that the PATCH method is not supported for this resource.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the PATCH request.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the PATCH request.
 	 */
-	protected virtual RestFramework.IRestResponse handlePatch() {
+	protected virtual libak_RestFramework.IRestResponse handlePatch() {
 		this.throwMethodNotAllowedException();
 		return null;
 	}
@@ -163,12 +163,12 @@ public virtual class RestProcessor {
 	 * Handles the HTTP DELETE method for processing REST requests. Override this method in a subclass to implement
 	 * custom DELETE request handling logic.
 	 *
-	 * If this method is called without being overridden in a subclass, it will throw a RestFramework.MethodNotAllowedException
+	 * If this method is called without being overridden in a subclass, it will throw a libak_RestFramework.MethodNotAllowedException
 	 * indicating that the DELETE method is not supported for this resource.
 	 *
-	 * @return An instance of RestFramework.IRestResponse representing the response to the DELETE request.
+	 * @return An instance of libak_RestFramework.IRestResponse representing the response to the DELETE request.
 	 */
-	protected virtual RestFramework.IRestResponse handleDelete() {
+	protected virtual libak_RestFramework.IRestResponse handleDelete() {
 		this.throwMethodNotAllowedException();
 		return null;
 	}
@@ -178,7 +178,7 @@ public virtual class RestProcessor {
 
 	/**
 	 * Retrieves the value of a URI parameter by its name. URI parameters are placeholders
-	 * in the URI template specified when configuring the `RestProcessor`.
+	 * in the URI template specified when configuring the `libak_RestProcessor`.
 	 *
 	 * @param paramName The name of the URI parameter to retrieve.
 	 * @return The value of the URI parameter if found, or `null` if the parameter is not present.
@@ -219,13 +219,13 @@ public virtual class RestProcessor {
 	 * Parses the URI string based on the configured URI template and prepares a map of URI parameters.
 	 * This method is automatically called when URI parameters need to be accessed.
 	 *
-	 * @throws RestFramework.InvalidUriException If the URI structure does not match the expected template.
+	 * @throws libak_RestFramework.InvalidUriException If the URI structure does not match the expected template.
 	 */
 	private void parseUriParams() {
 		List<String> uriItems = this.request.requestURI.substringAfter('/').split('/');
 		List<String> templateItems = this.uriTemplate.substringAfter('/').split('/');
 		if (uriItems.size() != templateItems.size()) {
-			throw new RestFramework.InvalidUriException(RestFramework.ERROR_MESSAGE_INVALID_URI + this.request.requestURI);
+			throw new libak_RestFramework.InvalidUriException(libak_RestFramework.ERROR_MESSAGE_INVALID_URI + this.request.requestURI);
 		}
 		this.uriParamsMap = new Map<String, String>();
 		while (!templateItems.isEmpty()) {
@@ -238,15 +238,15 @@ public virtual class RestProcessor {
 	}
 
 	/**
-	 * Throws a RestFramework.MethodNotAllowedException with a message indicating that the current HTTP method is not allowed
+	 * Throws a libak_RestFramework.MethodNotAllowedException with a message indicating that the current HTTP method is not allowed
 	 * for the requested resource.
 	 *
-	 * @throws RestFramework.MethodNotAllowedException Thrown to indicate that the HTTP method is not allowed for the resource.
+	 * @throws libak_RestFramework.MethodNotAllowedException Thrown to indicate that the HTTP method is not allowed for the resource.
 	 */
 	private void throwMethodNotAllowedException() {
-		throw new RestFramework.MethodNotAllowedException(
+		throw new libak_RestFramework.MethodNotAllowedException(
 			String.format(
-				RestFramework.ERROR_MESSAGE_METHOD_NOT_ALLOWED,
+				libak_RestFramework.ERROR_MESSAGE_METHOD_NOT_ALLOWED,
 				new List<String>{this.request.httpMethod, this.request.requestURI}
 			)
 		);

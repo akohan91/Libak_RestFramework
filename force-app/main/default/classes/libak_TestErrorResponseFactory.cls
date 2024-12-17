@@ -1,29 +1,29 @@
 @IsTest
-public with sharing class TestErrorResponseFactory {
+public with sharing class libak_TestErrorResponseFactory {
 	@IsTest
 	static void testCustomException(){
 		RestContext.response = new RestResponse();
-		RestFramework.IErrorResponseFactory responseFactory = new ErrorResponseFactory();
-		Exception exc = new RestFramework.MethodNotAllowedException('Error message');
+		libak_RestFramework.IErrorResponseFactory responseFactory = new libak_ErrorResponseFactory();
+		Exception exc = new libak_RestFramework.MethodNotAllowedException('Error message');
 
 		Test.startTest();
 
-		RestFramework.IRestResponse response = responseFactory.newErrorRestResponse(exc);
+		libak_RestFramework.IRestResponse response = responseFactory.newErrorRestResponse(exc);
 		response.sendResponse();
 
 		Test.stopTest();
 
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_METHOD_NOT_ALLOWED,
+			libak_RestFramework.HTTP_CODE_METHOD_NOT_ALLOWED,
 			RestContext.response.statusCode,
 			'The status code of response should be 405'
 		);
@@ -37,27 +37,27 @@ public with sharing class TestErrorResponseFactory {
 	@IsTest
 	static void testUnexpectedException(){
 		RestContext.response = new RestResponse();
-		RestFramework.IErrorResponseFactory responseFactory = new ErrorResponseFactory();
+		libak_RestFramework.IErrorResponseFactory responseFactory = new libak_ErrorResponseFactory();
 		Exception exc = new TestUnexpectedException('Error message');
 
 		Test.startTest();
 
-		RestFramework.IRestResponse response = responseFactory.newErrorRestResponse(exc);
+		libak_RestFramework.IRestResponse response = responseFactory.newErrorRestResponse(exc);
 		response.sendResponse();
 
 		Test.stopTest();
 
 		System.assert(
-			RestContext.response.headers.containsKey(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			RestContext.response.headers.containsKey(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The response should have the "Content-Type" header.'
 		);
 		System.assertEquals(
-			RestFramework.CONTENT_TYPE_APPLICATION_JSON,
-			RestContext.response.headers.get(RestFramework.HEADER_NAME_CONTENT_TYPE),
+			libak_RestFramework.CONTENT_TYPE_APPLICATION_JSON,
+			RestContext.response.headers.get(libak_RestFramework.HEADER_NAME_CONTENT_TYPE),
 			'The "Content-Type" header should be "application/json"'
 		);
 		System.assertEquals(
-			RestFramework.HTTP_CODE_INTERNAL_SERVER_ERROR,
+			libak_RestFramework.HTTP_CODE_INTERNAL_SERVER_ERROR,
 			RestContext.response.statusCode,
 			'The status code of response should be 500'
 		);

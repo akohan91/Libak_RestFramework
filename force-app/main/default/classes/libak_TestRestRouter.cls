@@ -1,5 +1,5 @@
 @IsTest
-public with sharing class TestRestRouter {
+public with sharing class libak_TestRestRouter {
 
 	public static final String URI_TEMPLATE = '/testRestRouter/:uriParam';
 
@@ -8,13 +8,13 @@ public with sharing class TestRestRouter {
 		RestRequest request = new RestRequest();
 		request.requestURI = '/testRestRouter/param_1';
 		RestContext.request = request;
-		RestRouter router = new RestRouterInstance().setRoutes();
+		libak_RestRouter router = new RestRouterInstance().setRoutes();
 
 		Test.startTest();
 
-		RestProcessor processor = router.newRestProcessor(
+		libak_RestProcessor processor = router.newRestProcessor(
 			request,
-			new TestErrorResponseFactory(),
+			new libak_TestErrorResponseFactory(),
 			new TestRestLogger()
 		);
 
@@ -23,20 +23,20 @@ public with sharing class TestRestRouter {
 		System.assertEquals(
 			request,
 			processor.request,
-			'Wrong "request" property of RestProcessor instance.'
+			'Wrong "request" property of libak_RestProcessor instance.'
 		);
 		System.assertEquals(
 			URI_TEMPLATE,
 			processor.uriTemplate,
-			'Wrong "uriTemplate" property of RestProcessor instance.'
+			'Wrong "uriTemplate" property of libak_RestProcessor instance.'
 		);
 		System.assert(
-			processor.errorResponseFactory instanceOf TestErrorResponseFactory,
-			'Wrong "errorResponseFactory" property of RestProcessor instance.'
+			processor.errorResponseFactory instanceOf libak_TestErrorResponseFactory,
+			'Wrong "errorResponseFactory" property of libak_RestProcessor instance.'
 		);
 		System.assert(
 			processor.restLogger instanceOf TestRestLogger,
-			'Wrong "errorResponseFactory" property of RestProcessor instance.'
+			'Wrong "errorResponseFactory" property of libak_RestProcessor instance.'
 		);
 	}
 
@@ -45,25 +45,25 @@ public with sharing class TestRestRouter {
 		RestRequest request = new RestRequest();
 		request.requestURI = '/invalidURI';
 		RestContext.request = request;
-		RestRouter router = new RestRouterInstance().setRoutes();
+		libak_RestRouter router = new RestRouterInstance().setRoutes();
 
 		Test.startTest();
 
 		try {
-			RestProcessor processor = router.newRestProcessor(
+			libak_RestProcessor processor = router.newRestProcessor(
 				request,
-				new TestErrorResponseFactory(),
+				new libak_TestErrorResponseFactory(),
 				new TestRestLogger()
 			);
 			throw new TestCustomException('Go in to catch block.');
 		} catch (Exception exc) {
 			System.assertEquals(
-				RestFramework.ERROR_MESSAGE_INVALID_URI + request.requestURI,
+				libak_RestFramework.ERROR_MESSAGE_INVALID_URI + request.requestURI,
 				exc.getMessage(),
 				'Wrong exception message'
 			);
 			System.assert(
-				exc instanceOf RestFramework.InvalidUriException,
+				exc instanceOf libak_RestFramework.InvalidUriException,
 				'Wrong exception type'
 			);
 		}
@@ -71,23 +71,23 @@ public with sharing class TestRestRouter {
 		Test.stopTest();
 	}
 
-	private class RestRouterInstance extends RestRouter {
-		override public RestRouter setRoutes() {
+	private class RestRouterInstance extends libak_RestRouter {
+		override public libak_RestRouter setRoutes() {
 			this.routeToRestProcessorType = new Map<String, Type>{
-				URI_TEMPLATE => RestProcessor.class
+				URI_TEMPLATE => libak_RestProcessor.class
 			};
 			return this;
 		}
 	}
 
-	private class TestRestLogger implements RestFramework.IRestLogger {
+	private class TestRestLogger implements libak_RestFramework.IRestLogger {
 		public void initLog(RestRequest request) {}
 		public void addErrorDetails(Exception exc) {}
 		public void createLog() {}
 	}
 
-	private class TestErrorResponseFactory implements RestFramework.IErrorResponseFactory {
-		public RestFramework.IRestResponse newErrorRestResponse(Exception exc) {
+	private class libak_TestErrorResponseFactory implements libak_RestFramework.IErrorResponseFactory {
+		public libak_RestFramework.IRestResponse newErrorRestResponse(Exception exc) {
 			return null;
 		}
 	}
