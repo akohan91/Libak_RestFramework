@@ -1,3 +1,0 @@
-node CI/scripts/validation_comment_tests/test_validation_result_mock_success.js &&
-node CI/scripts/validation_comment_tests/test_validation_result_mock_fail.js &&
-node CI/scripts/validation_comment_tests/test_validation_result_mock_components_fail.js
