@@ -12,55 +12,8 @@ on:
       - opened
       - synchronize
       - reopened
-  
+
 jobs:
-  validate_scratch_deploy:
-    runs-on: ubuntu-latest
-    steps:
-      # Install Salesforce CLI
-      - name: Install Salesforce CLI
-        run: |
-          npm install @salesforce/cli --location=global
-          nodeInstallPath=$(npm config get prefix)
-          echo "$nodeInstallPath/bin" >> $GITHUB_PATH
-          sf --version
-
-      # Checkout the code in the pull request
-      - name: Checkout source code
-        uses: actions/checkout@v3
-
-      # Load secret for dev hub
-      - name: Populate auth file with SFDX_URL secret
-        shell: bash
-        run: "echo ${{ secrets.SFDX_AUTH_URL }} > ./SFDX_URL_STORE.txt"
-
-      # Authenticate with dev hub
-      - name: Authenticate with dev hub
-        run: sf org login sfdx-url -f ./SFDX_URL_STORE.txt -a LibakDevHub -d
-
-      # Run Apex Tests
-      - name: Deployment Validation
-        id: run_tests
-        run: |
-          sf project deploy start --test-level RunLocalTests --dry-run --json --target-org LibakDevHub > validation_result.json || true
-
-      # Post Comment on PR if Tests Fail or Coverage is Low
-      - name: Post Comment on PR
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const deploymentResult = JSON.parse(fs.readFileSync('./validation_result.json', 'utf8'));
-            
-            const message = require('./CI/scripts/validation_comment.js')(deploymentResult);
-
-            await github.rest.issues.createComment({
-              ...context.repo,
-              issue_number: context.payload.pull_request?.number,
-              body: message
-            });
-
-            if(deploymentResult.status === 1) {
-              throw new Error('Deployment Validation was failed. See Pull Request comments.')
-            }
-
+  deploy_verification:
+    uses: akohan91/libak-salesforce-ci/.github/workflows/deployment_validation.yaml@main
+    secrets: inherit
