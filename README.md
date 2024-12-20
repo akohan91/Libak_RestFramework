@@ -66,11 +66,33 @@ The API Reference documentation is available [here](API_Reference.md). It provid
 
 ## 🤝 Contribution
 
-We welcome contributions from the community! Here's how you can get involved:
+We welcome contributions! Here’s how you can get started:
 
-1. Fork this repository.
-2. Create a new branch for your feature or bug fix.
-3. Submit a pull request with a detailed description of your changes.
+1. **🍴 Fork the Repository**
+
+2. **🌱 Create a New Branch**
+
+Work on your changes in a separate branch.
+
+Follow the branch naming conventions:
+
+- ✨ For features: `feature/<branch-name>`
+- 🐛 For bug fixes: `bugfix/<branch-name>`
+- 📚 For documentation: `doc/<branch-name>`
+
+3. **🔧 Make Changes and Test**
+
+Implement your changes and ensure everything works.
+
+4. **🚀 Push Your Changes**
+
+Push your branch to your forked repository:
+
+`git push origin your-branch-name`
+
+5. **📬 Submit a Pull Request**
+
+Open a pull request to the develop branch with a clear description of your changes.
 
 
 ## 📝 License
