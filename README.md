@@ -35,8 +35,9 @@ A lightweight, open-source Salesforce REST framework built with Apex to simplify
 
 It includes interfaces for routing, response handling, error management, and logging, along with core components for processing RESTful requests.
 
-## Features
+## 💡 Features
 
+- **Business Logic Focused:** Allows developers to concentrate on solving business challenges while the framework handles routing, error management, and API structure.
 - **Customizable:** Easily define and manage REST endpoints.
 - **Scalable:** Supports enterprise-level integrations.
 - **Developer-Friendly:** Clear structure and easy-to-use API.
@@ -47,7 +48,7 @@ It includes interfaces for routing, response handling, error management, and log
 
 ## Getting Started
 
-### Installation
+### 🚀 Installation
 
 - **1st option**
   1. Clone or download this repository.
@@ -55,15 +56,15 @@ It includes interfaces for routing, response handling, error management, and log
 - **2nd option**
   1. Use the "Deploy to Salesforce" button to deploy the framework to your target organization.
 
-### Developer guide
+### 📘 Developer guide
 
 A comprehensive Developer Guide is available [here](Developer_Guide.md). Follow the link for detailed instructions and advanced usage examples.
 
-### API Reference
+### 📕 API Reference
 
 The API Reference documentation is available [here](API_Reference.md). It provides detailed descriptions of all classes, methods, and endpoints included in the framework.
 
-## Contribution
+## 🤝 Contribution
 
 We welcome contributions from the community! Here's how you can get involved:
 
@@ -72,11 +73,11 @@ We welcome contributions from the community! Here's how you can get involved:
 3. Submit a pull request with a detailed description of your changes.
 
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
-## Contact
+## 📧 Contact
 
 Have questions or feedback? Reach out to the repository owner or start a discussion in the Issues tab.
