@@ -43,7 +43,7 @@ Create a new Salesforce web service class as the entry point:
 
 ```java
 @RestResource(UrlMapping='/*/customer/*')
-global with sharing class CustomerWebService {
+global with sharing class CustomerWebServiceDemo {
 	@HttpGet
 	global static void doGet() {
 		
@@ -90,7 +90,7 @@ Let's create it:
 public class CustomerRestRouter extends libak_RestRouter {
 	override public libak_RestRouter setRoutes() {
 		this.routeToRestProcessorType = new Map<String, Type>{
-			'/v1/customers' => CustomersListProcessorV1.class,
+			'/v1/customers' => CustomersProcessorV1.class,
 			'/v1/customers/:customer_sf_id' => CustomerProcessorV1.class
 		};
 		return this;
@@ -114,13 +114,13 @@ public class CustomerRestRouter extends libak_RestRouter {
 }
 ```
 
-> **_NOTE:_** We recommend to put Rest Router as an inner class in our `CustomerWebService` class to have clear view of our API when the developer opens the web service class.
+> **_NOTE:_** We recommend to put Rest Router as an inner class in our `CustomerWebServiceDemo` class to have clear view of our API when the developer opens the web service class.
 
-At this point the `CustomerWebService` class looks like this:
+At this point the `CustomerWebServiceDemo` class looks like this:
 
 ```java
 @RestResource(UrlMapping='/*/customer/*')
-global with sharing class CustomerWebService {
+global with sharing class CustomerWebServiceDemo {
 	@HttpGet
 	global static void doGet() {
 		
@@ -139,12 +139,13 @@ global with sharing class CustomerWebService {
 	}
 
 	public class CustomerRestRouter extends libak_RestRouter {
-	override public libak_RestRouter setRoutes() {
-		this.routeToRestProcessorType = new Map<String, Type>{
-			'/v1/customers' => CustomersListProcessorV1.class,
-			'/v1/customers/:customer_sf_id' => CustomerProcessorV1.class
-		};
-		return this;
+		override public libak_RestRouter setRoutes() {
+			this.routeToRestProcessorType = new Map<String, Type>{
+				'/v1/customers' => CustomersProcessorV1.class,
+				'/v1/customers/:customer_sf_id' => CustomerProcessorV1.class
+			};
+			return this;
+		}
 	}
 }
 ```
@@ -156,7 +157,7 @@ Well, We've already done a good job to implement a base version of building our 
 Now it's time to implement our REST Processors.
 
 As you remember we agreed to have two of them:
-- `CustomersListProcessorV1` for `/v1/customers`
+- `CustomersProcessorV1` for `/v1/customers`
 - `CustomerProcessorV1` for `/v1/customers/:customer_sf_id`
 
 Here is a few things you have to consider about it:
@@ -178,7 +179,7 @@ Now we know good enough at this stage to prepare our Rest Processors
 
 ```java
 // Here you can see there is no pagination implementation. We will add it later to show the versioning functionality.
-public class CustomersListProcessorV1 extends libak_RestProcessor {
+public class CustomersProcessorV1 extends libak_RestProcessor {
 	protected override libak_RestFramework.IRestResponse handleGet() {
 		List<Account> accounts = [
 			SELECT Id, Name, Phone, BillingStreet, BillingCity, BillingState, BillingPostalCode
@@ -186,10 +187,10 @@ public class CustomersListProcessorV1 extends libak_RestProcessor {
 			LIMIT 100
 		];
 
-		if (!accounts.isEmpty()) {
-			return new libak_JsonResponse(accounts);
+		if (accounts.isEmpty()) {
+			return new libak_ErrorResponse(404, 'Accounts are not found', '');
 		} else {
-			throw new libak_RestFramework.NotFoundException('Accounts are not found');
+			return new libak_JsonResponse(accounts);
 		}
 	}
 
@@ -212,9 +213,10 @@ public class CustomerProcessorV1 extends libak_RestProcessor {
 		];
 
 		if (accounts.isEmpty()) {
-			throw new libak_RestFramework.NotFoundException('Account not found');
+			return new libak_ErrorResponse(404, 'Accounts are not found', '');
+		} else {
+			return new libak_JsonResponse(accounts.get(0));
 		}
-		return new libak_JsonResponse(accounts.get(0));
 	}
 
 	protected override libak_RestFramework.IRestResponse handlePut() {
@@ -222,7 +224,7 @@ public class CustomerProcessorV1 extends libak_RestProcessor {
 		List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
 
 		if (existingAccounts.isEmpty()) {
-			throw new libak_RestFramework.NotFoundException('Account not found');
+			return new libak_ErrorResponse(404, 'Account are not found', '');
 		}
 
 		Account updatedAccount = (Account)JSON.deserialize(this.request.requestBody.toString(), Account.class);
@@ -236,7 +238,7 @@ public class CustomerProcessorV1 extends libak_RestProcessor {
 		List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
 
 		if (existingAccounts.isEmpty()) {
-			throw new libak_RestFramework.NotFoundException('Account not found');
+			return new libak_ErrorResponse(404, 'Account are not found', '');
 		}
 
 		delete existingAccounts.get(0);
@@ -249,7 +251,7 @@ public class CustomerProcessorV1 extends libak_RestProcessor {
 
 We have good news for you we have almost everything to make our web service workable.
 
-The only thing which should be done is to execute our logic in the `@HttpGet`, `@HttpPost`, `@HttpPut`, and `@HttpDelete` methods of the `CustomerWebService` class.
+The only thing which should be done is to execute our logic in the `@HttpGet`, `@HttpPost`, `@HttpPut`, and `@HttpDelete` methods of the `CustomerWebServiceDemo` class.
 
 For this purpose there are a few static methods:
 - `handleRequest(Type routerType)`
@@ -264,7 +266,7 @@ Here is a full version of our web service:
 
 ```java
 @RestResource(UrlMapping='/*/customers/*')
-global with sharing class CustomersWebService {
+global with sharing class CustomerWebServiceDemo {
 	@HttpGet
 	global static void doGet() {
 		libak_RestFramework.handleRequest(CustomerRestRouter.class);
@@ -285,14 +287,14 @@ global with sharing class CustomersWebService {
 	public class CustomerRestRouter extends libak_RestRouter {
 		override public libak_RestRouter setRoutes() {
 			this.routeToRestProcessorType = new Map<String, Type>{
-				'/v1/customers' => CustomersListProcessorV1.class,
+				'/v1/customers' => CustomersProcessorV1.class,
 				'/v1/customers/:customer_sf_id' => CustomerProcessorV1.class
 			};
 			return this;
 		}
 	}
 
-	public class CustomersListProcessorV1 extends libak_RestProcessor {
+	public class CustomersProcessorV1 extends libak_RestProcessor {
 		protected override libak_RestFramework.IRestResponse handleGet() {
 			List<Account> accounts = [
 				SELECT Id, Name, Phone, BillingStreet, BillingCity, BillingState, BillingPostalCode
@@ -300,10 +302,10 @@ global with sharing class CustomersWebService {
 				LIMIT 100
 			];
 
-			if (!accounts.isEmpty()) {
-				return new libak_JsonResponse(accounts);
+			if (accounts.isEmpty()) {
+				return new libak_ErrorResponse(404, 'Accounts are not found', '');
 			} else {
-				throw new libak_RestFramework.NotFoundException('Accounts are not found');
+				return new libak_JsonResponse(accounts);
 			}
 		}
 
@@ -324,9 +326,10 @@ global with sharing class CustomersWebService {
 			];
 
 			if (accounts.isEmpty()) {
-				throw new libak_RestFramework.NotFoundException('Account not found');
+				return new libak_ErrorResponse(404, 'Accounts are not found', '');
+			} else {
+				return new libak_JsonResponse(accounts.get(0));
 			}
-			return new libak_JsonResponse(accounts.get(0));
 		}
 
 		protected override libak_RestFramework.IRestResponse handlePut() {
@@ -334,7 +337,7 @@ global with sharing class CustomersWebService {
 			List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
 
 			if (existingAccounts.isEmpty()) {
-				throw new libak_RestFramework.NotFoundException('Account not found');
+				return new libak_ErrorResponse(404, 'Account are not found', '');
 			}
 
 			Account updatedAccount = (Account)JSON.deserialize(this.request.requestBody.toString(), Account.class);
@@ -348,7 +351,7 @@ global with sharing class CustomersWebService {
 			List<Account> existingAccounts = [SELECT Id FROM Account WHERE Id = :accountId];
 
 			if (existingAccounts.isEmpty()) {
-				throw new libak_RestFramework.NotFoundException('Account not found');
+				return new libak_ErrorResponse(404, 'Account are not found', '');
 			}
 
 			delete existingAccounts.get(0);
