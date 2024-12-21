@@ -5,7 +5,6 @@
 public class libak_ErrorResponseFactory implements libak_RestFramework.IErrorResponseFactory {
 	private Map<String, Integer> httpStatusByErrorType = new Map<String, Integer>{
 		libak_RestFramework.InvalidUriException.class.getName() => libak_RestFramework.HTTP_CODE_BAD_REQUEST,
-		libak_RestFramework.NotFoundException.class.getName() => libak_RestFramework.HTTP_CODE_NOT_FOUND,
 		libak_RestFramework.MethodNotAllowedException.class.getName() => libak_RestFramework.HTTP_CODE_METHOD_NOT_ALLOWED
 	};
 

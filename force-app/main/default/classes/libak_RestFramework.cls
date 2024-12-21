@@ -99,11 +99,6 @@ public class libak_RestFramework {
 	public class InvalidUriException extends Exception {}
 
 	/**
-	 * This exception is thrown when a requested resource is not found. It represents a client error (HTTP 404 Not Found).
-	 */
-	public class NotFoundException extends Exception {}
-
-	/**
 	 * This exception is thrown when an HTTP method is not allowed for a particular resource. It represents a client error (HTTP 405 Method Not Allowed).
 	 */
 	public class MethodNotAllowedException extends Exception {}
