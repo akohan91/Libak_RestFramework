@@ -2,7 +2,7 @@
 
 <span>
   <img
-    alt="Deploy to Salesforce"
+    alt="RestFramework - Salesforce Apex REST Framework"
     src="assets/small_logo.png"
     height="28px"
   >
